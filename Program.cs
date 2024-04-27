@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace DomashnayaKniga
 {
     internal static class Program

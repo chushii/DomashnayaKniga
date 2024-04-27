@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DomashnayaKniga.Tables;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -32,6 +34,9 @@ namespace DomashnayaKniga
 
         private void buttonLogin_Click(object sender, EventArgs e)
         {
+            var options = new DbContextOptionsBuilder<Context>().UseSqlite("Filename=../../../Database.db").Options;
+            using var db = new Context(options);
+            db.Database.EnsureCreated();
             Hide();
             string fName = "неизвестный";
             string lName = "пользователь";
