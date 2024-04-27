@@ -7,14 +7,15 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DomashnayaKniga
 {
-    public partial class WinLogin : Form
+    public partial class WinSignIn : Form
     {
-        public WinLogin()
+        public WinSignIn()
         {
             InitializeComponent();
         }
@@ -27,7 +28,7 @@ namespace DomashnayaKniga
         private void gotoSignup_Click(object sender, EventArgs e)
         {
             Hide();
-            WinSignup signup = new WinSignup();
+            WinSignUp signup = new WinSignUp();
             signup.Closed += (s, args) => Close();
             signup.Show();
         }
@@ -37,12 +38,17 @@ namespace DomashnayaKniga
             var options = new DbContextOptionsBuilder<Context>().UseSqlite("Filename=../../../Database.db").Options;
             using var db = new Context(options);
             db.Database.EnsureCreated();
-            Hide();
-            string fName = "неизвестный";
-            string lName = "пользователь";
-            WinMain main = new WinMain(fName, lName);
-            main.Closed += (s, args) => Close();
-            main.Show();
+            User[] match = db.Users.FromSql($"SELECT * FROM Users WHERE Login = {textBoxLogin.Text} AND Password = {textBoxPassword.Text}").ToArray();
+            if (match.Count() == 0)
+            {
+                MessageBox.Show("Неправильный логин или пароль", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                textBoxLogin.Text = ""; textBoxPassword.Text = "";
+            }
+            else
+            {
+                Hide(); WinMain main = new WinMain(match[0].ToString());
+                main.Closed += (s, args) => Close(); main.Show();
+            }
         }
     }
 }

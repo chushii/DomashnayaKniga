@@ -12,18 +12,18 @@ namespace DomashnayaKniga
 {
     public partial class WinMain : Form
     {
-        public WinMain(string fName, string lName)
+        public WinMain(string name)
         {
             InitializeComponent();
-            labelWelcome.Text = $"Добро пожаловать, {fName} {lName}!";
+            labelWelcome.Text = $"Добро пожаловать, {name}!";
         }
 
         private void buttonLogout_Click(object sender, EventArgs e)
         {
             Hide();
-            WinLogin login = new WinLogin();
-            login.Closed += (s, args) => Close();
-            login.Show();
+            WinSignIn signin = new WinSignIn();
+            signin.Closed += (s, args) => Close();
+            signin.Show();
         }
     }
 }

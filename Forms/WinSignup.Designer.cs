@@ -1,6 +1,6 @@
 ﻿namespace DomashnayaKniga
 {
-    partial class WinSignup
+    partial class WinSignUp
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WinSignup));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WinSignUp));
             titlePanel = new Panel();
             titleText = new Label();
             titleIcon = new PictureBox();
