@@ -42,7 +42,7 @@ namespace DomashnayaKniga
             else
             {
                 var newUser = new User
-                    { Login = textBoxLogin.Text, Password = textBoxPassword.Text, FirstName = textBoxFirstName.Text, LastName = textBoxLastName.Text };
+                    { Login = textBoxLogin.Text, Password = Encryptor.Hasher(textBoxPassword.Text, null), FirstName = textBoxFirstName.Text, LastName = textBoxLastName.Text };
                 db.Users.Add(newUser); db.SaveChanges();
                 MessageBox.Show("Новый пользователь добавлен", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 Hide(); WinSignIn signin = new WinSignIn();

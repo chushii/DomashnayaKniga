@@ -39,7 +39,7 @@ namespace DomashnayaKniga
             var options = new DbContextOptionsBuilder<Context>().UseSqlite("Filename=../../../Database.db").Options;
             using var db = new Context(options);
             db.Database.EnsureCreated();
-            User[] match = db.Users.FromSql($"SELECT * FROM Users WHERE Login = {textBoxLogin.Text} AND Password = {textBoxPassword.Text}").ToArray();
+            User[] match = db.Users.FromSql($"SELECT * FROM Users WHERE Login = {textBoxLogin.Text}").ToArray();
             if (match.Count() == 0)
             {
                 MessageBox.Show("Неправильный логин или пароль", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -47,8 +47,17 @@ namespace DomashnayaKniga
             }
             else
             {
-                Hide(); WinMain main = new WinMain(match[0].ToString());
-                main.Closed += (s, args) => Close(); main.Show();
+                if (match.First().Password != Encryptor.Hasher(textBoxPassword.Text, Encryptor.Extract(match.First().Password)))
+                {
+                    MessageBox.Show("Неправильный логин или пароль", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBoxLogin.Text = ""; textBoxPassword.Text = "";
+                }
+                else
+                {
+                    Hide(); WinMain main = new WinMain(match[0].ToString());
+                    main.Closed += (s, args) => Close(); main.Show();
+                }
+                
             }
         }
 
