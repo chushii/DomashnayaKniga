@@ -31,14 +31,7 @@ namespace DomashnayaKniga
 
         private void buttonSignup_Click(object sender, EventArgs e)
         {
-            if (textBoxLogin.Text == "" || textBoxPassword.Text == "" || textBoxPassword2.Text == "" || textBoxFirstName.Text == "" || textBoxLastName.Text == "")
-            {
-                MessageBox.Show("Заполните все поля", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error); return;
-            }
-            else if (textBoxPassword.Text != textBoxPassword2.Text)
-            {
-                MessageBox.Show("Пароли не совпадают", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error); textBoxPassword2.Text = ""; return;
-            }
+            if (InvalidTextBoxes(textBoxLogin.Text, textBoxPassword.Text, textBoxPassword2.Text, textBoxFirstName.Text, textBoxLastName.Text)) return;
             var options = new DbContextOptionsBuilder<Context>().UseSqlite("Filename=../../../Database.db").Options;
             using var db = new Context(options);
             db.Database.EnsureCreated();
@@ -55,7 +48,19 @@ namespace DomashnayaKniga
                 Hide(); WinSignIn signin = new WinSignIn();
                 signin.Closed += (s, args) => Close(); signin.Show();
             }
-            
+        }
+
+        public static bool InvalidTextBoxes(string login, string pass1, string pass2, string fname, string lname)
+        {
+            if (login == "" || pass1 == "" || pass2 == "" || fname == "" || lname == "")
+            {
+                MessageBox.Show("Заполните все поля", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error); return true;
+            }
+            else if (pass1 != pass2)
+            {
+                MessageBox.Show("Пароли не совпадают", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error); return true;
+            }
+            else return false;
         }
     }
 }

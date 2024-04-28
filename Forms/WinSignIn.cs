@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace DomashnayaKniga
 {
@@ -47,6 +48,15 @@ namespace DomashnayaKniga
             else
             {
                 Hide(); WinMain main = new WinMain(match[0].ToString());
+                main.Closed += (s, args) => Close(); main.Show();
+            }
+        }
+
+        private void titleIcon_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                Hide(); WinMain main = new WinMain("missingno");
                 main.Closed += (s, args) => Close(); main.Show();
             }
         }

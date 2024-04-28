@@ -208,8 +208,9 @@
             gotoLogin.TextAlign = ContentAlignment.MiddleCenter;
             gotoLogin.Click += gotoLogin_Click;
             // 
-            // WinSignup
+            // WinSignUp
             // 
+            AcceptButton = buttonSignup;
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(382, 593);
@@ -229,7 +230,7 @@
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Margin = new Padding(3, 4, 3, 4);
             MaximizeBox = false;
-            Name = "WinSignup";
+            Name = "WinSignUp";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Регистрация";
             titlePanel.ResumeLayout(false);
