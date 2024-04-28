@@ -1,6 +1,6 @@
 ﻿namespace DomashnayaKniga
 {
-    partial class WinLogin
+    partial class WinSignIn
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WinLogin));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WinSignIn));
             titlePanel = new Panel();
             titleText = new Label();
             titleIcon = new PictureBox();
@@ -74,6 +74,7 @@
             titleIcon.SizeMode = PictureBoxSizeMode.Zoom;
             titleIcon.TabIndex = 0;
             titleIcon.TabStop = false;
+            titleIcon.MouseClick += titleIcon_MouseClick;
             // 
             // labelLogin
             // 
@@ -155,8 +156,9 @@
             gotoSignup.TextAlign = ContentAlignment.MiddleCenter;
             gotoSignup.Click += gotoSignup_Click;
             // 
-            // WinLogin
+            // WinSignIn
             // 
+            AcceptButton = buttonLogin;
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(382, 393);
@@ -171,7 +173,7 @@
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Margin = new Padding(3, 4, 3, 4);
             MaximizeBox = false;
-            Name = "WinLogin";
+            Name = "WinSignIn";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Вход в учётную запись";
             titlePanel.ResumeLayout(false);
