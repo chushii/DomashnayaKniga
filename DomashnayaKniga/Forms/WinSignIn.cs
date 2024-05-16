@@ -9,21 +9,18 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DomashnayaKniga.Tables;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace DomashnayaKniga
+namespace DomashnayaKniga.Forms
 {
     public partial class WinSignIn : Form
     {
-        private Context dbase = new Context(
-            new DbContextOptionsBuilder<Context>().UseSqlite("Filename=../../../Database.db").Options);
+        private Context dbase = new Context();
 
         public WinSignIn()
         {
             InitializeComponent();
-            dbase.Database.EnsureCreated();
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)

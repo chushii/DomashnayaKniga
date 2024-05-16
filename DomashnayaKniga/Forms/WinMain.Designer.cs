@@ -1,4 +1,4 @@
-﻿namespace DomashnayaKniga
+﻿namespace DomashnayaKniga.Forms
 {
     partial class WinMain
     {
@@ -29,10 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WinMain));
-            labelWelcome = new Label();
             menuStrip1 = new MenuStrip();
             mainToolStripMenuItem = new ToolStripMenuItem();
-            databaseToolStripMenuItem = new ToolStripMenuItem();
             sqlToolStripMenuItem = new ToolStripMenuItem();
             ormToolStripMenuItem = new ToolStripMenuItem();
             otherToolStripMenuItem = new ToolStripMenuItem();
@@ -41,20 +39,10 @@
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
-            // labelWelcome
-            // 
-            labelWelcome.AutoSize = true;
-            labelWelcome.Font = new Font("Microsoft Sans Serif", 16.2F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            labelWelcome.Location = new Point(12, 44);
-            labelWelcome.Name = "labelWelcome";
-            labelWelcome.Size = new Size(274, 32);
-            labelWelcome.TabIndex = 0;
-            labelWelcome.Text = "Добро пожаловать!";
-            // 
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { mainToolStripMenuItem, databaseToolStripMenuItem, otherToolStripMenuItem, logoutToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { mainToolStripMenuItem, sqlToolStripMenuItem, ormToolStripMenuItem, otherToolStripMenuItem, logoutToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(782, 28);
@@ -63,28 +51,25 @@
             // 
             // mainToolStripMenuItem
             // 
+            mainToolStripMenuItem.Enabled = false;
             mainToolStripMenuItem.Name = "mainToolStripMenuItem";
             mainToolStripMenuItem.Size = new Size(148, 24);
             mainToolStripMenuItem.Text = "Главная страница";
-            // 
-            // databaseToolStripMenuItem
-            // 
-            databaseToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sqlToolStripMenuItem, ormToolStripMenuItem });
-            databaseToolStripMenuItem.Name = "databaseToolStripMenuItem";
-            databaseToolStripMenuItem.Size = new Size(111, 24);
-            databaseToolStripMenuItem.Text = "База данных";
+            mainToolStripMenuItem.Click += mainToolStripMenuItem_Click;
             // 
             // sqlToolStripMenuItem
             // 
             sqlToolStripMenuItem.Name = "sqlToolStripMenuItem";
-            sqlToolStripMenuItem.Size = new Size(125, 26);
+            sqlToolStripMenuItem.Size = new Size(49, 24);
             sqlToolStripMenuItem.Text = "SQL";
+            sqlToolStripMenuItem.Click += sqlToolStripMenuItem_Click;
             // 
             // ormToolStripMenuItem
             // 
             ormToolStripMenuItem.Name = "ormToolStripMenuItem";
-            ormToolStripMenuItem.Size = new Size(125, 26);
+            ormToolStripMenuItem.Size = new Size(56, 24);
             ormToolStripMenuItem.Text = "ORM";
+            ormToolStripMenuItem.Click += ormToolStripMenuItem_Click;
             // 
             // otherToolStripMenuItem
             // 
@@ -98,6 +83,7 @@
             hashingToolStripMenuItem.Name = "hashingToolStripMenuItem";
             hashingToolStripMenuItem.Size = new Size(190, 26);
             hashingToolStripMenuItem.Text = "Хеширование";
+            hashingToolStripMenuItem.Click += hashingToolStripMenuItem_Click;
             // 
             // logoutToolStripMenuItem
             // 
@@ -113,11 +99,12 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(782, 553);
-            Controls.Add(labelWelcome);
             Controls.Add(menuStrip1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
             Margin = new Padding(3, 4, 3, 4);
+            MaximizeBox = false;
             Name = "WinMain";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Домашняя Книга";
@@ -129,15 +116,13 @@
 
         #endregion
 
-        private System.Windows.Forms.Label labelWelcome;
         private MenuStrip menuStrip1;
         private ToolStripMenuItem mainToolStripMenuItem;
-        private ToolStripMenuItem databaseToolStripMenuItem;
         private ToolStripMenuItem otherToolStripMenuItem;
         private ToolStripMenuItem sqlToolStripMenuItem;
-        private ToolStripMenuItem ormToolStripMenuItem;
         private ToolStripMenuItem logoutToolStripMenuItem;
         private ToolStripMenuItem hashingToolStripMenuItem;
+        private ToolStripMenuItem ormToolStripMenuItem;
     }
 }
 

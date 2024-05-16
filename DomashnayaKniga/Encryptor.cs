@@ -10,7 +10,7 @@ namespace DomashnayaKniga
     public class Encryptor
     {
         const int saltSize = 8;
-        public static string Hasher(string password, byte[] saltBytes)
+        public static string Hasher(string password, byte[]? saltBytes)
         {
             if (saltBytes == null)
             {

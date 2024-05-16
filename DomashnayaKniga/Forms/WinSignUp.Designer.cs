@@ -1,4 +1,4 @@
-﻿namespace DomashnayaKniga
+﻿namespace DomashnayaKniga.Forms
 {
     partial class WinSignUp
     {

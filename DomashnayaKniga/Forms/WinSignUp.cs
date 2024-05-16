@@ -1,5 +1,4 @@
-﻿using DomashnayaKniga.Tables;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,10 +11,12 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DomashnayaKniga
+namespace DomashnayaKniga.Forms
 {
     public partial class WinSignUp : Form
     {
+        private Context dbase = new Context();
+
         public WinSignUp()
         {
             InitializeComponent();
@@ -32,10 +33,7 @@ namespace DomashnayaKniga
         private void buttonSignup_Click(object sender, EventArgs e)
         {
             if (InvalidTextBoxes(textBoxLogin.Text, textBoxPassword.Text, textBoxPassword2.Text, textBoxFirstName.Text, textBoxLastName.Text)) return;
-            var options = new DbContextOptionsBuilder<Context>().UseSqlite("Filename=../../../Database.db").Options;
-            using var db = new Context(options);
-            db.Database.EnsureCreated();
-            if (db.Users.FromSql($"SELECT * FROM Users WHERE Login = {textBoxLogin.Text}").Any())
+            if (dbase.Users.FromSql($"SELECT * FROM Users WHERE Login = {textBoxLogin.Text}").Any())
             {
                 MessageBox.Show("Пользователь с таким логином уже существует", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -43,7 +41,7 @@ namespace DomashnayaKniga
             {
                 var newUser = new User
                     { Login = textBoxLogin.Text, Password = Encryptor.Hasher(textBoxPassword.Text, null), FirstName = textBoxFirstName.Text, LastName = textBoxLastName.Text };
-                db.Users.Add(newUser); db.SaveChanges();
+                dbase.Users.Add(newUser); dbase.SaveChanges();
                 MessageBox.Show("Новый пользователь добавлен", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 Hide(); WinSignIn signin = new WinSignIn();
                 signin.Closed += (s, args) => Close(); signin.Show();
