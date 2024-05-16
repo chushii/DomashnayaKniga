@@ -1,24 +1,29 @@
-﻿using DomashnayaKniga.Tables;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using DomashnayaKniga.Tables;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace DomashnayaKniga
 {
     public partial class WinSignIn : Form
     {
+        private Context dbase = new Context(
+            new DbContextOptionsBuilder<Context>().UseSqlite("Filename=../../../Database.db").Options);
+
         public WinSignIn()
         {
             InitializeComponent();
+            dbase.Database.EnsureCreated();
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -36,28 +41,28 @@ namespace DomashnayaKniga
 
         private void buttonLogin_Click(object sender, EventArgs e)
         {
-            var options = new DbContextOptionsBuilder<Context>().UseSqlite("Filename=../../../Database.db").Options;
-            using var db = new Context(options);
-            db.Database.EnsureCreated();
-            User[] match = db.Users.FromSql($"SELECT * FROM Users WHERE Login = {textBoxLogin.Text}").ToArray();
-            if (match.Count() == 0)
+            if (textBoxPassword.Text == "" || textBoxLogin.Text == "")
             {
-                MessageBox.Show("Неправильный логин или пароль", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                textBoxLogin.Text = ""; textBoxPassword.Text = "";
+                MessageBox.Show("Заполните все поля", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error); return;
             }
-            else
+            User[] match = dbase.Users.FromSql($"SELECT * FROM Users WHERE Login = {textBoxLogin.Text}").ToArray();
+            if (match.Count() == 1)
             {
-                if (match.First().Password != Encryptor.Hasher(textBoxPassword.Text, Encryptor.Extract(match.First().Password)))
+                if (match[0].Password != Encryptor.Hasher(textBoxPassword.Text, Encryptor.Extract(match[0].Password)))
                 {
                     MessageBox.Show("Неправильный логин или пароль", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     textBoxLogin.Text = ""; textBoxPassword.Text = "";
                 }
                 else
                 {
-                    Hide(); WinMain main = new WinMain(match[0].ToString());
+                    Hide(); WinMain main = new WinMain(match[0]);
                     main.Closed += (s, args) => Close(); main.Show();
                 }
-                
+            }
+            else
+            {
+                MessageBox.Show("Неправильный логин или пароль", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                textBoxLogin.Text = ""; textBoxPassword.Text = "";
             }
         }
 
@@ -65,7 +70,8 @@ namespace DomashnayaKniga
         {
             if (e.Button == MouseButtons.Right)
             {
-                Hide(); WinMain main = new WinMain("missingno");
+                User user = dbase.Users.First();
+                Hide(); WinMain main = new WinMain(user);
                 main.Closed += (s, args) => Close(); main.Show();
             }
         }

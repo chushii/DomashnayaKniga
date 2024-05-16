@@ -10,6 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DomashnayaKniga\**" />
+    <EmbeddedResource Remove="DomashnayaKniga\**" />
+    <None Remove="DomashnayaKniga\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="favicon.ico" />
   </ItemGroup>
 

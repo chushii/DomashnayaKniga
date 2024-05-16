@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 
 namespace DomashnayaKniga
 {
-    internal class Encryptor
+    public class Encryptor
     {
         const int saltSize = 8;
         public static string Hasher(string password, byte[] saltBytes)
