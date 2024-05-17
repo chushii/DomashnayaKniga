@@ -61,6 +61,7 @@
             buttonSave.TabIndex = 3;
             buttonSave.Text = "Принять";
             buttonSave.UseVisualStyleBackColor = true;
+            buttonSave.Click += buttonSave_Click;
             // 
             // buttonCancel
             // 
@@ -71,6 +72,7 @@
             buttonCancel.TabIndex = 4;
             buttonCancel.Text = "Отмена";
             buttonCancel.UseVisualStyleBackColor = true;
+            buttonCancel.Click += buttonCancel_Click;
             // 
             // listViewValues
             // 

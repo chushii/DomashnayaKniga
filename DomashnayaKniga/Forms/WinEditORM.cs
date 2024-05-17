@@ -14,9 +14,10 @@ namespace DomashnayaKniga.Forms
 {
     public partial class WinEditORM : Form
     {
-        private List<string> cols;
-        private List<string?>? vals;
-        public WinEditORM(List<string> columns, List<string?>? values)
+        public List<string> cols;
+        public List<string> vals;
+
+        public WinEditORM(List<string> columns, List<string> values)
         {
             InitializeComponent();
             cols = columns; vals = values;
@@ -27,9 +28,28 @@ namespace DomashnayaKniga.Forms
             for (int i = 1; i < cols.Count; i++)
             {
                 listViewColumns.Items.Add(new ListViewItem(cols[i]));
-                if (vals == null) listViewValues.Items.Add(new ListViewItem(""));
-                else listViewValues.Items.Add(new ListViewItem(vals[i]));
+                listViewValues.Items.Add(new ListViewItem(vals[i]));
             }
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            
+            for (int i = 0; i < listViewValues.Items.Count; i++)
+            {
+                if (listViewValues.Items[i].Text == "")
+                {
+                    MessageBox.Show("Заполните все поля значений", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                else vals[i] = listViewValues.Items[i].Text;
+            }
+            DialogResult = DialogResult.OK;
+        }
+
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
         }
     }
 }

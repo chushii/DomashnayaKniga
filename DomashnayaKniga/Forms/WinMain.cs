@@ -15,6 +15,7 @@ namespace DomashnayaKniga.Forms
     public partial class WinMain : Form
     {
         #region Dynamic Controls
+
         private Label labelWelcome = new Label()
         {
             AutoSize = true,
@@ -58,11 +59,7 @@ namespace DomashnayaKniga.Forms
             Text = "Удалить",
             Enabled = false
         };
-        private ToolStripMenuItem saveToolStripMenuItem = new ToolStripMenuItem()
-        {
-            Text = "Сохранить",
-            Enabled = false
-        };
+
         #endregion
 
         private Context dbase = new Context();
@@ -79,11 +76,10 @@ namespace DomashnayaKniga.Forms
             addToolStripMenuItem.Click += addToolStripMenuItem_Click;
             updateToolStripMenuItem.Click += updateToolStripMenuItem_Click;
             deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
-            saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
             ormMenuStrip.Items.AddRange(new ToolStripItem[]
             {
-                tablesToolStripComboBox, addToolStripMenuItem, updateToolStripMenuItem,
-                deleteToolStripMenuItem, saveToolStripMenuItem
+                tablesToolStripComboBox, addToolStripMenuItem,
+                updateToolStripMenuItem, deleteToolStripMenuItem,
             });
             Controls.Add(labelWelcome);
         }
@@ -132,6 +128,8 @@ namespace DomashnayaKniga.Forms
             Controls.Add(ormMenuStrip);
         }
 
+        #region ORM Page
+
         private void addToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             List<string> columns = new List<string>();
@@ -139,8 +137,29 @@ namespace DomashnayaKniga.Forms
             {
                 columns.Add(dataGridViewUsers.Columns[i].Name);
             }
-            WinEditORM add = new WinEditORM(columns, null);
-            add.Show();
+            List<string> values = new List<string>();
+            for (int i = 0; i < dataGridViewUsers.Columns.Count; i++)
+            {
+                values.Add("");
+            }
+            WinEditORM add = new WinEditORM(columns, values);
+            DialogResult result = add.ShowDialog(this);
+            if (result == DialogResult.Cancel) return;
+            switch (tablesToolStripComboBox.Text)
+            {
+                case "Users":
+                    User user = new User();
+                    user.Login = add.vals[0];
+                    user.Password = Encryptor.Hasher(add.vals[1], null);
+                    user.FirstName = add.vals[2];
+                    user.LastName = add.vals[3];
+                    dbase.Users.Add(user);
+                    break;
+                default:
+                    break;
+            }
+            dbase.SaveChanges();
+            dataGridViewUsers.Refresh();
         }
 
         private void updateToolStripMenuItem_Click(object? sender, EventArgs e)
@@ -151,13 +170,33 @@ namespace DomashnayaKniga.Forms
             {
                 columns.Add(dataGridViewUsers.Columns[i].Name);
             }
-            List<string?>? values = new List<string?>();
+            List<string> values = new List<string>();
             for (int i = 0; i < dataGridViewUsers.Columns.Count; i++)
             {
-                values.Add(dataGridViewUsers.SelectedRows[0].Cells[i].Value.ToString());
+                string? value = dataGridViewUsers.SelectedRows[0].Cells[i].Value.ToString() ?? "";
+                values.Add(value);
             }
-            WinEditORM add = new WinEditORM(columns, values);
-            add.Show();
+            WinEditORM upd = new WinEditORM(columns, values);
+            DialogResult result = upd.ShowDialog(this);
+            if (result == DialogResult.Cancel) return;
+            int index = dataGridViewUsers.SelectedRows[0].Index;
+            int.TryParse(dataGridViewUsers[0, index].Value.ToString(), out int id);
+            switch (tablesToolStripComboBox.Text)
+            {
+                case "Users":
+                    User? user = dbase.Users.Find(id);
+                    if (user == null) return;
+                    user.Login = upd.vals[0];
+                    if (user.Password != upd.vals[1])
+                        user.Password = Encryptor.Hasher(upd.vals[1], null);
+                    user.FirstName = upd.vals[2];
+                    user.LastName = upd.vals[3];
+                    break;
+                default:
+                    break;
+            }
+            dbase.SaveChanges();
+            dataGridViewUsers.Refresh();
         }
 
         private void deleteToolStripMenuItem_Click(object? sender, EventArgs e)
@@ -166,13 +205,20 @@ namespace DomashnayaKniga.Forms
                 $"Удалить строку {dataGridViewUsers.SelectedRows[0].Cells[0].Value}?", "Подтверждение",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                dataGridViewUsers.Rows.Remove(dataGridViewUsers.SelectedRows[0]);
+                int index = dataGridViewUsers.SelectedRows[0].Index; 
+                int.TryParse(dataGridViewUsers[0, index].Value.ToString(), out int id);
+                switch (tablesToolStripComboBox.Text)
+                {
+                    case "Users":
+                        User? user = dbase.Users.Find(id);
+                        if (user != null) dbase.Users.Remove(user);
+                        break;
+                    default:
+                        break;
+                }
+                dbase.SaveChanges();
+                dataGridViewUsers.Refresh();
             }
-        }
-
-        private void saveToolStripMenuItem_Click(object? sender, EventArgs e)
-        {
-            MessageBox.Show("Сохранить");
         }
 
         private void tablesToolStripComboBox_KeyPress(object? sender, KeyPressEventArgs e)
@@ -189,7 +235,6 @@ namespace DomashnayaKniga.Forms
                     addToolStripMenuItem.Enabled = false;
                     updateToolStripMenuItem.Enabled = false;
                     deleteToolStripMenuItem.Enabled = false;
-                    saveToolStripMenuItem.Enabled = false;
                     break;
                 case "Users":
                     dbase.Users.Load();
@@ -197,11 +242,12 @@ namespace DomashnayaKniga.Forms
                     addToolStripMenuItem.Enabled = true;
                     updateToolStripMenuItem.Enabled = true;
                     deleteToolStripMenuItem.Enabled = true;
-                    saveToolStripMenuItem.Enabled = true;
                     break;
                 default:
                     break;
             }
         }
+
+        #endregion
     }
 }
