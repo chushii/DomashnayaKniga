@@ -25,7 +25,7 @@ namespace DomashnayaKniga.Forms
 
         private void WinEditORM_Load(object sender, EventArgs e)
         {
-            for (int i = 1; i < cols.Count; i++)
+            for (int i = 0; i < cols.Count; i++)
             {
                 listViewColumns.Items.Add(new ListViewItem(cols[i]));
                 listViewValues.Items.Add(new ListViewItem(vals[i]));
@@ -37,12 +37,7 @@ namespace DomashnayaKniga.Forms
             
             for (int i = 0; i < listViewValues.Items.Count; i++)
             {
-                if (listViewValues.Items[i].Text == "")
-                {
-                    MessageBox.Show("Заполните все поля значений", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                else vals[i] = listViewValues.Items[i].Text;
+                vals[i] = listViewValues.Items[i].Text;
             }
             DialogResult = DialogResult.OK;
         }

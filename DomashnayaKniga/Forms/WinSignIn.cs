@@ -52,7 +52,7 @@ namespace DomashnayaKniga.Forms
                 }
                 else
                 {
-                    Hide(); WinMain main = new WinMain(match[0]);
+                    Hide(); WinMain main = new WinMain(match[0].Id);
                     main.Closed += (s, args) => Close(); main.Show();
                 }
             }
@@ -68,7 +68,7 @@ namespace DomashnayaKniga.Forms
             if (e.Button == MouseButtons.Right)
             {
                 User user = dbase.Users.First();
-                Hide(); WinMain main = new WinMain(user);
+                Hide(); WinMain main = new WinMain(user.Id);
                 main.Closed += (s, args) => Close(); main.Show();
             }
         }
