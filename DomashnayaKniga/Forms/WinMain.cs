@@ -66,6 +66,46 @@ namespace DomashnayaKniga.Forms
             Enabled = false
         };
 
+        private TextBox textBoxInput = new TextBox()
+        {
+            Location = new Point(12, 40),
+            Multiline = true,
+            ScrollBars = ScrollBars.Vertical,
+            Size = new Size(758, 227)
+        };
+
+        private TextBox textBoxOutput = new TextBox()
+        {
+            Location = new Point(12, 314),
+            Multiline = true,
+            ScrollBars = ScrollBars.Both,
+            Size = new Size(758, 227),
+            WordWrap = false
+        };
+
+        private Button buttonClear = new Button()
+        {
+            Location = new Point(12, 273),
+            Size = new Size(115, 35),
+            Text = "Очистить",
+            UseVisualStyleBackColor = true
+        };
+
+        private Button buttonExecute = new Button()
+        {
+            Location = new Point(655, 273),
+            Size = new Size(115, 35),
+            Text = "Выполнить",
+            UseVisualStyleBackColor = true
+        };
+
+        private Label labelStatus = new Label()
+        {
+            Location = new Point(404, 280),
+            Size = new Size(245, 25),
+            TextAlign = ContentAlignment.TopRight
+        };
+
         #endregion
 
         private Context dbase = new Context();
@@ -83,6 +123,9 @@ namespace DomashnayaKniga.Forms
             addToolStripMenuItem.Click += addToolStripMenuItem_Click;
             updateToolStripMenuItem.Click += updateToolStripMenuItem_Click;
             deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
+            buttonClear.Click += buttonClear_Click;
+            buttonExecute.Click += buttonExecute_Click;
+            textBoxOutput.KeyPress += textBoxOutput_KeyPress;
             ormMenuStrip.Items.AddRange(new ToolStripItem[]
             {
                 tablesToolStripComboBox, addToolStripMenuItem,
@@ -229,6 +272,11 @@ namespace DomashnayaKniga.Forms
             Controls.Add(labelWelcome);
             Controls.Remove(dataGridViewTable);
             Controls.Remove(ormMenuStrip);
+            Controls.Remove(textBoxInput);
+            Controls.Remove(textBoxOutput);
+            Controls.Remove(buttonClear);
+            Controls.Remove(buttonExecute);
+            Controls.Remove(labelStatus);
             labelWelcome.Text = $"Добро пожаловать, {dbase.Users.Find(logged)}!";
         }
 
@@ -240,6 +288,11 @@ namespace DomashnayaKniga.Forms
             Controls.Remove(labelWelcome);
             Controls.Remove(dataGridViewTable);
             Controls.Remove(ormMenuStrip);
+            Controls.Add(textBoxInput);
+            Controls.Add(textBoxOutput);
+            Controls.Add(buttonClear);
+            Controls.Add(buttonExecute);
+            Controls.Add(labelStatus);
         }
 
         private void ormToolStripMenuItem_Click(object sender, EventArgs e)
@@ -250,6 +303,11 @@ namespace DomashnayaKniga.Forms
             Controls.Remove(labelWelcome);
             Controls.Add(dataGridViewTable);
             Controls.Add(ormMenuStrip);
+            Controls.Remove(textBoxInput);
+            Controls.Remove(textBoxOutput);
+            Controls.Remove(buttonClear);
+            Controls.Remove(buttonExecute);
+            Controls.Remove(labelStatus);
         }
 
         #endregion
@@ -523,5 +581,27 @@ namespace DomashnayaKniga.Forms
 
         #endregion
 
+        #region SQL Page
+
+        private void buttonClear_Click(object? sender, EventArgs e)
+        {
+            textBoxInput.Text = "";
+            textBoxOutput.Text = "";
+            labelStatus.Text = "";
+        }
+
+        private void buttonExecute_Click(object? sender, EventArgs e)
+        {
+            textBoxOutput.Text = "Обработка запросов SQL пока недоступна";
+            labelStatus.Text = "WIP";
+            labelStatus.ForeColor = Color.Blue;
+        }
+
+        private void textBoxOutput_KeyPress(object? sender, KeyPressEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        #endregion
     }
 }
