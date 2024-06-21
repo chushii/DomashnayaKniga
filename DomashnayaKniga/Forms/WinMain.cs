@@ -15,6 +15,7 @@ using Microsoft.VisualBasic.ApplicationServices;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Security;
 using Microsoft.EntityFrameworkCore.Metadata;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace DomashnayaKniga.Forms
 {
@@ -592,9 +593,98 @@ namespace DomashnayaKniga.Forms
 
         private void buttonExecute_Click(object? sender, EventArgs e)
         {
-            textBoxOutput.Text = "Обработка запросов SQL пока недоступна";
-            labelStatus.Text = "WIP";
-            labelStatus.ForeColor = Color.Blue;
+            string command = textBoxInput.Text;
+            if (command.IndexOf(';') != -1) command = command.Substring(0, command.IndexOf(';'));
+            string type = checkType(command), table = checkTable(command, type);
+            switch (table)
+            {
+                case "users":
+                    labelStatus.Text = "Выполнено";
+                    labelStatus.ForeColor = Color.Green;
+                    textBoxOutput.Text = table;
+                    break;
+                case "books":
+                    labelStatus.Text = "Выполнено";
+                    labelStatus.ForeColor = Color.Green;
+                    textBoxOutput.Text = table;
+                    break;
+                case "rooms":
+                    labelStatus.Text = "Выполнено";
+                    labelStatus.ForeColor = Color.Green;
+                    textBoxOutput.Text = table;
+                    break;
+                case "computers":
+                    labelStatus.Text = "Выполнено";
+                    labelStatus.ForeColor = Color.Green;
+                    textBoxOutput.Text = table;
+                    break;
+                case "error_from":
+                    labelStatus.Text = "Ошибка";
+                    labelStatus.ForeColor = Color.Red;
+                    textBoxOutput.Text = "Ошибка: ключевое слово FROM не найдено";
+                    break;
+                case "error_into":
+                    labelStatus.Text = "Ошибка";
+                    labelStatus.ForeColor = Color.Red;
+                    textBoxOutput.Text = "Ошибка: ключевое слово INTO не найдено";
+                    break;
+                case "error_table":
+                    labelStatus.Text = "Ошибка";
+                    labelStatus.ForeColor = Color.Red;
+                    textBoxOutput.Text = "Ошибка: ключевое слово TABLE не найдено";
+                    break;
+                case "error_none":
+                    labelStatus.Text = "Ошибка";
+                    labelStatus.ForeColor = Color.Red;
+                    if (type == "error") textBoxOutput.Text = "Ошибка: пустой запрос";
+                    else textBoxOutput.Text = "Ошибка: команда не поддерживается";
+                    break;
+                default:
+                    labelStatus.Text = "Ошибка";
+                    labelStatus.ForeColor = Color.Red;
+                    textBoxOutput.Text = $"Ошибка: таблица {table} не найдена";
+                    break;
+            }
+        }
+
+        private string checkType(string quary)
+        {
+            if (quary == "") return "error";
+            string result = quary.Split(" ")[0].TrimEnd().ToLower();
+            quary = quary.Substring(result.Length);
+            switch (result)
+            {
+                case "select": case "insert": case "delete": case "update":
+                    break;
+                default:
+                    return "none";
+            }
+            return result;
+        }
+
+        private string checkTable(string quary, string type)
+        {
+            int i;
+            if (type == "select" || type == "delete")
+            {
+                i = quary.ToLower().IndexOf("from ");
+                if (i == -1) return "error_from";
+                else i += 5;
+            }
+            else if (type == "insert")
+            {
+                i = quary.ToLower().IndexOf("into ");
+                if (i == -1) return "error_into";
+                else i += 5;
+            }
+            else if (type == "update")
+            {
+                i = quary.ToLower().IndexOf("table ");
+                if (i == -1) return "error_table";
+                else i += 6;
+            }
+            else return "error_none";
+            return quary.Substring(i).Split(" ")[0].ToLower();
         }
 
         private void textBoxOutput_KeyPress(object? sender, KeyPressEventArgs e)
