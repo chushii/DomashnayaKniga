@@ -15,7 +15,9 @@ using Microsoft.VisualBasic.ApplicationServices;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Security;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Data.Sqlite;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
 
 namespace DomashnayaKniga.Forms
 {
@@ -593,65 +595,90 @@ namespace DomashnayaKniga.Forms
 
         private void buttonExecute_Click(object? sender, EventArgs e)
         {
-            string command = textBoxInput.Text;
-            if (command.IndexOf(';') != -1) command = command.Substring(0, command.IndexOf(';'));
-            string type = checkType(command), table = checkTable(command, type);
-            switch (table)
+            using var connection = new SqliteConnection("Data Source=../../../Database.db");
+            string comm = textBoxInput.Text;
+            if (comm.IndexOf(';') != -1) comm = comm.Substring(0, comm.IndexOf(';'));
+            textBoxInput.Text = comm;
+            SqliteCommand command = new SqliteCommand(comm, connection);
+            string type = checkType(comm);
+            switch (type)
             {
-                case "users":
-                    labelStatus.Text = "Выполнено";
-                    labelStatus.ForeColor = Color.Green;
-                    textBoxOutput.Text = table;
-                    break;
-                case "books":
-                    labelStatus.Text = "Выполнено";
-                    labelStatus.ForeColor = Color.Green;
-                    textBoxOutput.Text = table;
-                    break;
-                case "rooms":
-                    labelStatus.Text = "Выполнено";
-                    labelStatus.ForeColor = Color.Green;
-                    textBoxOutput.Text = table;
-                    break;
-                case "computers":
-                    labelStatus.Text = "Выполнено";
-                    labelStatus.ForeColor = Color.Green;
-                    textBoxOutput.Text = table;
-                    break;
-                case "error_from":
+                case "error":
                     labelStatus.Text = "Ошибка";
                     labelStatus.ForeColor = Color.Red;
-                    textBoxOutput.Text = "Ошибка: ключевое слово FROM не найдено";
-                    break;
-                case "error_into":
+                    textBoxOutput.Text = "Ошибка: пустой запрос";
+                    return;
+                case "none":
                     labelStatus.Text = "Ошибка";
                     labelStatus.ForeColor = Color.Red;
-                    textBoxOutput.Text = "Ошибка: ключевое слово INTO не найдено";
-                    break;
-                case "error_table":
-                    labelStatus.Text = "Ошибка";
-                    labelStatus.ForeColor = Color.Red;
-                    textBoxOutput.Text = "Ошибка: ключевое слово TABLE не найдено";
-                    break;
-                case "error_none":
-                    labelStatus.Text = "Ошибка";
-                    labelStatus.ForeColor = Color.Red;
-                    if (type == "error") textBoxOutput.Text = "Ошибка: пустой запрос";
-                    else textBoxOutput.Text = "Ошибка: команда не поддерживается";
-                    break;
+                    textBoxOutput.Text = "Ошибка: команда не поддерживается";
+                    return;
                 default:
+                    break;
+            }
+            if (type == "select")
+            {
+                connection.Open();
+                try
+                {
+                    using SqliteDataReader reader = command.ExecuteReader();
+                    if (!reader.HasRows)
+                    {
+                        labelStatus.Text = "Пусто";
+                        labelStatus.ForeColor = Color.Blue;
+                        textBoxOutput.Text = "Строки, соответствующие данному запросу, не найдены";
+                        return;
+                    }
+                    textBoxOutput.Text = "";
+                    while (reader.Read())
+                    {
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            textBoxOutput.Text += reader.GetValue(i).ToString() + ", ";
+                        }
+                        textBoxOutput.Text = textBoxOutput.Text.Substring(0, textBoxOutput.Text.Length - 2) + Environment.NewLine;
+                    }
+                    labelStatus.Text = "Выполнено";
+                    labelStatus.ForeColor = Color.Green;
+                }
+                catch (Exception ex)
+                {
                     labelStatus.Text = "Ошибка";
                     labelStatus.ForeColor = Color.Red;
-                    textBoxOutput.Text = $"Ошибка: таблица {table} не найдена";
-                    break;
+                    textBoxOutput.Text = $"Ошибка: {ex.Message}";
+                }
+            }
+            else
+            {
+                connection.Open();
+                try
+                {
+                    int n = command.ExecuteNonQuery();
+                    if (n == 0)
+                    {
+                        labelStatus.Text = "Пусто";
+                        labelStatus.ForeColor = Color.Blue;
+                        textBoxOutput.Text = "Строки, соответствующие данному запросу, не найдены";
+                        return;
+                    }
+                    labelStatus.Text = "Выполнено";
+                    labelStatus.ForeColor = Color.Green;
+                    textBoxOutput.Text = $"{type.ToUpper()}: {n}";
+                    dbase.ChangeTracker.Clear();
+                }
+                catch (Exception ex)
+                {
+                    labelStatus.Text = "Ошибка";
+                    labelStatus.ForeColor = Color.Red;
+                    textBoxOutput.Text = $"Ошибка: {ex.Message}";
+                }
             }
         }
 
-        private string checkType(string quary)
+        private string checkType(string command)
         {
-            if (quary == "") return "error";
-            string result = quary.Split(" ")[0].TrimEnd().ToLower();
-            quary = quary.Substring(result.Length);
+            if (command == "") return "error";
+            string result = command.Split(" ")[0].TrimEnd().ToLower();
             switch (result)
             {
                 case "select": case "insert": case "delete": case "update":
@@ -660,31 +687,6 @@ namespace DomashnayaKniga.Forms
                     return "none";
             }
             return result;
-        }
-
-        private string checkTable(string quary, string type)
-        {
-            int i;
-            if (type == "select" || type == "delete")
-            {
-                i = quary.ToLower().IndexOf("from ");
-                if (i == -1) return "error_from";
-                else i += 5;
-            }
-            else if (type == "insert")
-            {
-                i = quary.ToLower().IndexOf("into ");
-                if (i == -1) return "error_into";
-                else i += 5;
-            }
-            else if (type == "update")
-            {
-                i = quary.ToLower().IndexOf("table ");
-                if (i == -1) return "error_table";
-                else i += 6;
-            }
-            else return "error_none";
-            return quary.Substring(i).Split(" ")[0].ToLower();
         }
 
         private void textBoxOutput_KeyPress(object? sender, KeyPressEventArgs e)
