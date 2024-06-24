@@ -39,6 +39,7 @@
             sqliteviewerToolStripMenuItem = new ToolStripMenuItem();
             githubToolStripMenuItem = new ToolStripMenuItem();
             logoutToolStripMenuItem = new ToolStripMenuItem();
+            querybuilderToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -76,7 +77,7 @@
             // 
             // otherToolStripMenuItem
             // 
-            otherToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { modelfillToolStripMenuItem, hashingToolStripMenuItem, sqliteviewerToolStripMenuItem, githubToolStripMenuItem });
+            otherToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { modelfillToolStripMenuItem, hashingToolStripMenuItem, querybuilderToolStripMenuItem, sqliteviewerToolStripMenuItem, githubToolStripMenuItem });
             otherToolStripMenuItem.Name = "otherToolStripMenuItem";
             otherToolStripMenuItem.Size = new Size(76, 24);
             otherToolStripMenuItem.Text = "Прочее";
@@ -84,28 +85,28 @@
             // modelfillToolStripMenuItem
             // 
             modelfillToolStripMenuItem.Name = "modelfillToolStripMenuItem";
-            modelfillToolStripMenuItem.Size = new Size(190, 26);
+            modelfillToolStripMenuItem.Size = new Size(249, 26);
             modelfillToolStripMenuItem.Text = "Заполнить БД";
             modelfillToolStripMenuItem.Click += modelfillToolStripMenuItem_Click;
             // 
             // hashingToolStripMenuItem
             // 
             hashingToolStripMenuItem.Name = "hashingToolStripMenuItem";
-            hashingToolStripMenuItem.Size = new Size(190, 26);
+            hashingToolStripMenuItem.Size = new Size(249, 26);
             hashingToolStripMenuItem.Text = "Хеширование";
             hashingToolStripMenuItem.Click += hashingToolStripMenuItem_Click;
             // 
             // sqliteviewerToolStripMenuItem
             // 
             sqliteviewerToolStripMenuItem.Name = "sqliteviewerToolStripMenuItem";
-            sqliteviewerToolStripMenuItem.Size = new Size(190, 26);
+            sqliteviewerToolStripMenuItem.Size = new Size(249, 26);
             sqliteviewerToolStripMenuItem.Text = "SQLite Viewer";
             sqliteviewerToolStripMenuItem.Click += sqliteviewerToolStripMenuItem_Click;
             // 
             // githubToolStripMenuItem
             // 
             githubToolStripMenuItem.Name = "githubToolStripMenuItem";
-            githubToolStripMenuItem.Size = new Size(190, 26);
+            githubToolStripMenuItem.Size = new Size(249, 26);
             githubToolStripMenuItem.Text = "GitHub";
             githubToolStripMenuItem.Click += githubToolStripMenuItem_Click;
             // 
@@ -117,6 +118,13 @@
             logoutToolStripMenuItem.Size = new Size(67, 24);
             logoutToolStripMenuItem.Text = "Выход";
             logoutToolStripMenuItem.Click += logoutToolStripMenuItem_Click;
+            // 
+            // querybuilderToolStripMenuItem
+            // 
+            querybuilderToolStripMenuItem.Name = "querybuilderToolStripMenuItem";
+            querybuilderToolStripMenuItem.Size = new Size(249, 26);
+            querybuilderToolStripMenuItem.Text = "Конструктор запросов";
+            querybuilderToolStripMenuItem.Click += querybuilderToolStripMenuItem_Click;
             // 
             // WinMain
             // 
@@ -150,6 +158,7 @@
         private ToolStripMenuItem sqliteviewerToolStripMenuItem;
         private ToolStripMenuItem githubToolStripMenuItem;
         private ToolStripMenuItem modelfillToolStripMenuItem;
+        private ToolStripMenuItem querybuilderToolStripMenuItem;
     }
 }
 

@@ -249,6 +249,12 @@ namespace DomashnayaKniga.Forms
             hashtest.Show();
         }
 
+        private void querybuilderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WinBuilder querybuilder = new WinBuilder();
+            querybuilder.Show();
+        }
+
         private void sqliteviewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start(new ProcessStartInfo
@@ -681,7 +687,10 @@ namespace DomashnayaKniga.Forms
             string result = command.Split(" ")[0].TrimEnd().ToLower();
             switch (result)
             {
-                case "select": case "insert": case "delete": case "update":
+                case "select":
+                case "insert":
+                case "delete":
+                case "update":
                     break;
                 default:
                     return "none";
@@ -695,5 +704,6 @@ namespace DomashnayaKniga.Forms
         }
 
         #endregion
+
     }
 }
