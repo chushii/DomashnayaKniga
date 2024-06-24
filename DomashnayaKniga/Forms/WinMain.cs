@@ -601,7 +601,7 @@ namespace DomashnayaKniga.Forms
 
         private void buttonExecute_Click(object? sender, EventArgs e)
         {
-            using var connection = new SqliteConnection("Data Source=../../../Database.db");
+            using var connection = new SqliteConnection("Data Source=../../../../Database.db");
             string comm = textBoxInput.Text;
             if (comm.IndexOf(';') != -1) comm = comm.Substring(0, comm.IndexOf(';'));
             textBoxInput.Text = comm;
